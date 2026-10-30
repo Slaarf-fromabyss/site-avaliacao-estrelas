@@ -170,7 +170,7 @@ async function submitComment(event: React.FormEvent<HTMLFormElement>) {
   setCommentName("");
   setCommentText("");
   setCommentRating(0);
-},
+}
       ...current,
     ]);
     setCommentName("");
@@ -352,7 +352,7 @@ async function submitComment(event: React.FormEvent<HTMLFormElement>) {
           <span className="brand-mark"><ShieldIcon /></span>
           <span><strong>Condenados</strong><small>a voltar</small></span>
         </div>
-        <p>© 2025 Condenados a Voltar. Todos os direitos reservados.</p>
+        <p>© 2026 Condenados a Voltar. Todos os direitos reservados.</p>
       </footer>
     </main>
   );
