@@ -1,4 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+const SUPABASE_URL = "https://mofhlhaztwihgbkgyaxn.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_v28B5F93tnGMn1imOkNYjg_S8onTgey";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 type Comment = {
   id: number;
@@ -76,33 +82,95 @@ function ShieldIcon() {
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [comments, setComments] = useState(initialComments);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [commentName, setCommentName] = useState("");
   const [commentText, setCommentText] = useState("");
   const [commentRating, setCommentRating] = useState(0);
   const [commentHoverRating, setCommentHoverRating] = useState(0);
 
-  function submitComment(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!commentName.trim() || !commentText.trim() || !commentRating) return;
+  useEffect(() => {
+  async function loadComments() {
+    const { data, error } = await supabase
+      .from("comments")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-    const initials = commentName
-      .trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((part) => part[0])
-      .join("")
-      .toUpperCase();
+    if (error) {
+      console.error("Erro ao carregar avaliações:", error);
+      return;
+    }
 
-    setComments((current) => [
+    if (data) {
+      setComments(
+        data.map((item) => ({
+          id: item.id,
+          name: item.name,
+          text: item.comment,
+          rating: item.rating,
+          date: new Date(item.created_at).toLocaleDateString("pt-BR"),
+          initials: item.name
+            .split(" ")
+            .map((part: string) => part[0])
+            .join("")
+            .slice(0, 2)
+            .toUpperCase(),
+        }))
+      );
+    }
+  }
+
+  loadComments();
+}, []);
+  
+async function submitComment(event: React.FormEvent<HTMLFormElement>) {
+  event.preventDefault();
+
+  if (!commentName.trim() || !commentText.trim() || !commentRating) return;
+
+  const name = commentName.trim();
+  const comment = commentText.trim();
+
+  const { data, error } = await supabase
+    .from("comments")
+    .insert([
       {
-        id: Date.now(),
-        name: commentName.trim(),
-        text: commentText.trim(),
+        name,
+        comment,
         rating: commentRating,
-        date: "Agora mesmo",
-        initials,
       },
+    ])
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Erro ao salvar avaliação:", error);
+    alert("Não foi possível enviar sua avaliação. Tente novamente.");
+    return;
+  }
+
+  const initials = name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+
+  setComments((current) => [
+    {
+      id: data.id,
+      name: data.name,
+      text: data.comment,
+      rating: data.rating,
+      date: new Date(data.created_at).toLocaleDateString("pt-BR"),
+      initials,
+    },
+    ...current,
+  ]);
+
+  setCommentName("");
+  setCommentText("");
+  setCommentRating(0);
+},
       ...current,
     ]);
     setCommentName("");
