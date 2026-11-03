@@ -171,12 +171,6 @@ async function submitComment(event: React.FormEvent<HTMLFormElement>) {
   setCommentText("");
   setCommentRating(0);
 }
-      ...current,
-    ]);
-    setCommentName("");
-    setCommentText("");
-    setCommentRating(0);
-  }
 
   return (
     <main className="site-shell">
