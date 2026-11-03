@@ -87,6 +87,12 @@ export default function App() {
   const [commentText, setCommentText] = useState("");
   const [commentRating, setCommentRating] = useState(0);
   const [commentHoverRating, setCommentHoverRating] = useState(0);
+  const averageRating =
+  comments.length > 0
+    ? comments.reduce((total, item) => total + item.rating, 0) / comments.length
+    : 0;
+
+  const formattedAverage = averageRating.toFixed(1).replace(".", ",");
 
   useEffect(() => {
   async function loadComments() {
@@ -229,10 +235,12 @@ async function submitComment(event: React.FormEvent<HTMLFormElement>) {
               Conheça a jornada <span>↓</span>
             </a>
             <div className="hero-score">
-              <strong>4,8</strong>
+              <strong>{formattedAverage}</strong>
               <div>
-                <StarRow rating={5} />
-                <span>Avaliação dos jogadores</span>
+                <StarRow rating={Math.round(averageRating)} />
+                <span>
+                  {comments.length} {comments.length === 1 ? "avaliação" : "avaliações"} dos jogadores
+                </span>
               </div>
             </div>
           </div>
