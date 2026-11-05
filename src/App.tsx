@@ -191,11 +191,7 @@ async function submitComment(event: React.FormEvent<HTMLFormElement>) {
           </span>
         </a>
 
-        <nav className={menuOpen ? "nav nav--open" : "nav"} aria-label="Principal">
-          <a href="#destaques" onClick={() => setMenuOpen(false)}>
-            Destaques
-          </a>
-          <img
+        <img
             src="/telhado-corp.png"
             alt="TELHADO Corp."
             style={{
@@ -204,6 +200,10 @@ async function submitComment(event: React.FormEvent<HTMLFormElement>) {
               objectFit: "contain",
             }}
           />
+        <nav className={menuOpen ? "nav nav--open" : "nav"} aria-label="Principal">
+          <a href="#destaques" onClick={() => setMenuOpen(false)}>
+            Destaques
+          </a>
           <a href="#comentarios" onClick={() => setMenuOpen(false)}>
             Comentários
           </a>
