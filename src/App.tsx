@@ -195,6 +195,15 @@ async function submitComment(event: React.FormEvent<HTMLFormElement>) {
           <a href="#destaques" onClick={() => setMenuOpen(false)}>
             Destaques
           </a>
+          <img
+            src="/telhado-corp.png"
+            alt="TELHADO Corp."
+            style={{
+              height: "30px",
+              width: "auto",
+              objectFit: "contain",
+            }}
+          />
           <a href="#comentarios" onClick={() => setMenuOpen(false)}>
             Comentários
           </a>
